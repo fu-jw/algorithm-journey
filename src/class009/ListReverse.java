@@ -16,6 +16,8 @@ public class ListReverse {
 
 		// 其他类型按引用传递
 		// 比如下面的Number是自定义的类
+		// 关于堆和栈的关系:
+		// 堆可比喻成“黑板”，栈就是学生的“小本本”
 		Number b = new Number(5);
 		g1(b);
 		System.out.println(b.val);
