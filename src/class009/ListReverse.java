@@ -82,9 +82,13 @@ public class ListReverse {
 			ListNode pre = null;
 			ListNode next = null;
 			while (head != null) {
+				// 记录下一个节点
 				next = head.next;
+				// 修改head指针
 				head.next = pre;
+				// 记录pre
 				pre = head;
+				// head移动到下一节点，继续
 				head = next;
 			}
 			return pre;
@@ -110,10 +114,14 @@ public class ListReverse {
 		DoubleListNode pre = null;
 		DoubleListNode next = null;
 		while (head != null) {
+			// 记录下一个节点
 			next = head.next;
+			// 修改head指针
 			head.next = pre;
 			head.last = next;
+			// 记录pre
 			pre = head;
+			// head移动到下一节点，继续
 			head = next;
 		}
 		return pre;
