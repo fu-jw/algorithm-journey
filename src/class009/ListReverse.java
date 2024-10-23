@@ -86,7 +86,7 @@ public class ListReverse {
 				next = head.next;
 				// 修改head指针
 				head.next = pre;
-				// 记录pre
+				// 修改pre
 				pre = head;
 				// head移动到下一节点，继续
 				head = next;
@@ -119,7 +119,7 @@ public class ListReverse {
 			// 修改head指针
 			head.next = pre;
 			head.last = next;
-			// 记录pre
+			// 修改pre
 			pre = head;
 			// head移动到下一节点，继续
 			head = next;
