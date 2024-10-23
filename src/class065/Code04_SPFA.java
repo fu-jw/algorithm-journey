@@ -1,8 +1,8 @@
 package class065;
 
 // Bellman-Ford + SPFA优化模版（洛谷）
-// 给定一个 n个点的有向图，请求出图中是否存在从顶点 1 出发能到达的负环
-// 负环的定义是：一条边权之和为负数的回路。
+// 给定n个点的有向图，请求出图中是否存在从顶点1出发能到达的负环
+// 负环的定义是：一条边权之和为负数的回路
 // 测试链接 : https://www.luogu.com.cn/problem/P3385
 // 请同学们务必参考如下代码中关于输入、输出的处理
 // 这是输入输出处理效率很高的写法
@@ -73,13 +73,18 @@ public class Code04_SPFA {
 		in.nextToken();
 		int cases = (int) in.nval;
 		for (int i = 0, n, m; i < cases; i++) {
-			in.nextToken(); n = (int) in.nval;
-			in.nextToken(); m = (int) in.nval;
+			in.nextToken();
+			n = (int) in.nval;
+			in.nextToken();
+			m = (int) in.nval;
 			build(n);
 			for (int j = 0, u, v, w; j < m; j++) {
-				in.nextToken(); u = (int) in.nval;
-				in.nextToken(); v = (int) in.nval;
-				in.nextToken(); w = (int) in.nval;
+				in.nextToken();
+				u = (int) in.nval;
+				in.nextToken();
+				v = (int) in.nval;
+				in.nextToken();
+				w = (int) in.nval;
 				if (w >= 0) {
 					addEdge(u, v, w);
 					addEdge(v, u, w);
@@ -109,7 +114,8 @@ public class Code04_SPFA {
 				if (distance[u] + w < distance[v]) {
 					distance[v] = distance[u] + w;
 					if (!enter[v]) {
-						if (updateCnt[v]++ == n) {
+						// 松弛次数超过n-1就有负环
+						if (++updateCnt[v] > n - 1) {
 							return true;
 						}
 						queue[r++] = v;

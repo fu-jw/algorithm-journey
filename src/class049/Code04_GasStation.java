@@ -12,23 +12,20 @@ public class Code04_GasStation {
 
 	public static int canCompleteCircuit(int[] gas, int[] cost) {
 		int n = gas.length;
-		// 车辆尝试从0~n-1出发，看能不能走一圈，l
-		// r : 窗口即将进来数字的位置
-		// len : 窗口大小
-		// sum : 窗口累加和
-		for (int l = 0, r = 0, len = 0, sum = 0; l < n; l++) {
-			while (sum >= 0) {
-				// 当前窗口累加和>=0，尝试扩
-				if (len == n) {
+		// 本来下标是0..n-1，但是扩充到0..2*n-1，i位置的余量信息在(r%n)位置
+		// 窗口范围是[l, r)，左闭右开，也就是说窗口是[l..r-1]，r是到不了的位置
+		for (int l = 0, r = 0, sum; l < n; l = r + 1, r = l) {
+			sum = 0;
+			while (sum + gas[r % n] - cost[r % n] >= 0) {
+				// r位置即将右扩，窗口会变大
+				if (r - l + 1 == n) { // 此时检查是否已经转了一圈
 					return l;
 				}
-				// r : 窗口即将进来数字的位置
-				r = (l + (len++)) % n;
-				sum += gas[r] - cost[r];
+				// r位置进入窗口，累加和加上r位置的余量
+				sum += gas[r % n] - cost[r % n];
+				// r右扩，窗口变大了
+				r++;
 			}
-			// sum < 0，此时l位置无法转一圈
-			len--;
-			sum -= gas[l] - cost[l];
 		}
 		return -1;
 	}

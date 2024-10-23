@@ -24,13 +24,13 @@ public class Code04_PerimeterSum1 {
 
 	public static int[] vsort = new int[MAXN];
 
-	// 线段树某范围对应的真实长度
+	// 线段树某范围总长度
 	public static int[] length = new int[MAXN << 2];
 
-	// 线段树某范围被覆盖的长度
+	// 线段树某范围覆盖长度
 	public static int[] cover = new int[MAXN << 2];
 
-	// 线段树某范围被覆盖了几次
+	// 线段树某范围覆盖次数
 	public static int[] times = new int[MAXN << 2];
 
 	public static int prepare(int n) {
@@ -79,13 +79,6 @@ public class Code04_PerimeterSum1 {
 		}
 	}
 
-	// 这个题的特殊性在于
-	// 1) 查询操作永远查的是整个范围，不会有范围查询，每次都返回cover[1]
-	// 2) 增加操作之后，后续一定会有等规模的减少操作
-	// 根据以上两点分析出不需要懒更新机制
-	// 首先当一次修改完成从下往上返回时，up方法能保证最上方的cover[1]是修改正确的
-	// 同时任何一次增加操作所涉及的线段树范围，后续一定能被等规模的减少操作取消掉
-	// 课上重点图解这个特殊性
 	private static void add(int jobl, int jobr, int jobv, int l, int r, int i) {
 		if (jobl <= l && r <= jobr) {
 			times[i] += jobv;
@@ -148,7 +141,12 @@ public class Code04_PerimeterSum1 {
 	public static long scan(int n) {
 		int m = prepare(n);
 		build(1, m, 1);
-		Arrays.sort(line, 1, n + 1, (a, b) -> a[0] - b[0]);
+		// 这里有个坑
+		// 在排序时，如果同一个位置的扫描线有多条，也就是a[0] == b[0]时
+		// 应该先处理区间覆盖+1的扫描线，然后再处理区间覆盖-1的扫描线
+		// 不然投影长度会频繁变化，导致答案错误
+		// 不过测试数据并没有安排这方面的测试
+		Arrays.sort(line, 1, n + 1, (a, b) -> a[0] != b[0] ? (a[0] - b[0]) : (b[3] - a[3]));
 		long ans = 0;
 		for (int i = 1, pre; i <= n; i++) {
 			pre = cover[1];

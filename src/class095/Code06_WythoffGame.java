@@ -18,11 +18,16 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StreamTokenizer;
+import java.math.BigDecimal;
 
 public class Code06_WythoffGame {
 
 	// 黄金分割比例
-	public static double split = (Math.sqrt(5.0) + 1.0) / 2.0;
+	// 洛谷在2024年5月增加了测试数据
+	// 需要更高精度的黄金比例 + 更高精度的乘法，才能全部通过
+	// 增加的测试用例有刻意为难的嫌疑，其实没啥意思
+	// Java就用BigDecimal类型支持高精度，C++同学可以用long double类型
+	public static BigDecimal split = new BigDecimal("1.61803398874989484");
 
 	public static int a, b;
 
@@ -35,8 +40,8 @@ public class Code06_WythoffGame {
 			in.nextToken();
 			b = (int) in.nval;
 			out.println(compute());
+			out.flush();
 		}
-		out.flush();
 		out.close();
 		br.close();
 	}
@@ -48,7 +53,8 @@ public class Code06_WythoffGame {
 		// 小 != (大 - 小) * 黄金分割比例，先手赢
 		// 小 == (大 - 小) * 黄金分割比例，后手赢
 		// 要向下取整
-		if (min != (int) (split * (max - min))) {
+		// 这里用BigDecimal类型的multiply方法，乘完后再转成整型，可以支持高精度的乘
+		if (min != split.multiply(new BigDecimal(max - min)).intValue()) {
 			return 1;
 		} else {
 			return 0;

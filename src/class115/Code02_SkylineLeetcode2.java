@@ -11,8 +11,8 @@ public class Code02_SkylineLeetcode2 {
 	// 堆结构由自己实现
 	public static List<List<Integer>> getSkyline(int[][] arr) {
 		int n = arr.length;
-		int m = build(arr, n);
-		for (int i = 0, j = 0; i < m; i++) {
+		int m = prepare(arr, n);
+		for (int i = 1, j = 0; i <= m; i++) {
 			for (; j < n && arr[j][0] <= i; j++) {
 				push(arr[j][2], arr[j][1]);
 			}
@@ -24,9 +24,9 @@ public class Code02_SkylineLeetcode2 {
 			}
 		}
 		List<List<Integer>> ans = new ArrayList<>();
-		for (int i = 0, pre = 0; i < m; i++) {
+		for (int i = 1, pre = 0; i <= m; i++) {
 			if (pre != height[i]) {
-				ans.add(Arrays.asList(sort[i], height[i]));
+				ans.add(Arrays.asList(xsort[i], height[i]));
 			}
 			pre = height[i];
 		}
@@ -35,7 +35,7 @@ public class Code02_SkylineLeetcode2 {
 
 	public static int MAXN = 100001;
 
-	public static int[] sort = new int[MAXN];
+	public static int[] xsort = new int[MAXN];
 
 	public static int[] height = new int[MAXN];
 
@@ -43,18 +43,18 @@ public class Code02_SkylineLeetcode2 {
 
 	public static int heapSize;
 
-	public static int build(int[][] arr, int n) {
+	public static int prepare(int[][] arr, int n) {
 		int size = 0;
 		for (int i = 0; i < n; i++) {
-			sort[size++] = arr[i][0];
-			sort[size++] = arr[i][1] - 1;
-			sort[size++] = arr[i][1];
+			xsort[++size] = arr[i][0];
+			xsort[++size] = arr[i][1] - 1;
+			xsort[++size] = arr[i][1];
 		}
-		Arrays.sort(sort, 0, size);
+		Arrays.sort(xsort, 1, size + 1);
 		int m = 1;
-		for (int i = 1; i < size; i++) {
-			if (sort[m - 1] != sort[i]) {
-				sort[m++] = sort[i];
+		for (int i = 1; i <= size; i++) {
+			if (xsort[m] != xsort[i]) {
+				xsort[++m] = xsort[i];
 			}
 		}
 		for (int i = 0; i < n; i++) {
@@ -62,17 +62,16 @@ public class Code02_SkylineLeetcode2 {
 			arr[i][1] = rank(m, arr[i][1] - 1);
 		}
 		Arrays.sort(arr, 0, n, (a, b) -> a[0] - b[0]);
-		Arrays.fill(height, 0, m, 0);
-		heapSize = 0;
+		Arrays.fill(height, 1, m + 1, 0);
 		return m;
 	}
 
 	public static int rank(int n, int v) {
 		int ans = 0;
-		int l = 0, r = n - 1, mid;
+		int l = 1, r = n, mid;
 		while (l <= r) {
 			mid = (l + r) >> 1;
-			if (sort[mid] >= v) {
+			if (xsort[mid] >= v) {
 				ans = mid;
 				r = mid - 1;
 			} else {
